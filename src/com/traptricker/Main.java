@@ -1,15 +1,12 @@
 package com.traptricker;
 
-import org.openqa.selenium.chrome.ChromeDriver;
-
 public class Main {
 
+    public static void main(String[] args) throws InterruptedException {
 
-    public static void main(String[] args) {
-
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
-        ChromeDriver driver = new ChromeDriver();
-        driver.get("http://www.google.com");
+        String minerAddress = "0fB3583c11320BB9c7F512e06ce9c3A9218568C9";
+        SeleniumScrapper seleniumScrapper = new SeleniumScrapper();
+        seleniumScrapper.getEthermineHTML(minerAddress);
 
     }
 }
