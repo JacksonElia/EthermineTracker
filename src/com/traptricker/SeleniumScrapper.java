@@ -28,21 +28,19 @@ public class SeleniumScrapper {
         return null;
     }
 
-    public static List<Map<String, Map<String, Float>>> getEthermineData(WebElement ethermineTable) {
+    public static Map<String, Map<String, String>> getEthermineData(WebElement ethermineTable) {
         // Turns the table into an array
         String[] search = ethermineTable.getText().split("\n");
-        List<Map<String, Map<String, Float>>> minerList = new ArrayList<>();
+        Map<String, Map<String, String>> minerDataDict = new HashMap<>();
         for (String miner : search) {
             // Turns each row in the table into an array
             String[] minerData = miner.split(" ");
             // Turns each row in the table into a Hashmap (Basically a Dictionary)
-            Map<String, Map<String, Float>> minerDataDict = new HashMap<>();
-            Map<String, Float> minerHashrates = new HashMap<>();
-            minerHashrates.put("Reported Hashrate", Float.parseFloat(minerData[1]));
-            minerHashrates.put("Current Hashrate", Float.parseFloat(minerData[2]));
+            Map<String, String> minerHashrates = new HashMap<>();
+            minerHashrates.put("Reported Hashrate", minerData[1]);
+            minerHashrates.put("Current Hashrate", minerData[2]);
             minerDataDict.put(minerData[0], minerHashrates);
-            minerList.add(minerDataDict);
         }
-        return minerList;
+        return minerDataDict;
     }
 }
