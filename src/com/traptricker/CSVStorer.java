@@ -2,21 +2,39 @@ package com.traptricker;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
 
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class CSVStorer {
-    public static void storeCSVData(String filePath, Map<String, Map<String, String>> minerData) throws Exception {
+
+    public static void storeCSVData(String filePath, Map<String, Map<String, String>> minerData) throws IOException, CsvException {
         CSVReader reader = new CSVReader(new FileReader(filePath));
         // Gets the whole CSV File
         List<String[]> allRows = reader.readAll();
         reader.close();
 
         CSVWriter writer = new CSVWriter(new FileWriter(filePath));
+
+        float reportedHashrateTotal = 0;
+        // float currentHashrateTotal = 0;
+        for (String[] row : allRows) {
+            reportedHashrateTotal += Float.parseFloat(row[1]);
+            // currentHashrateTotal += Float.parseFloat(row[2]);
+        }
+
+        // Gives percentage that each worker has mined
+        for (String[] row : allRows) {
+            // For reported hashrate
+            System.out.println(row[0] + " has mined " + Math.round((Float.parseFloat(row[1]) / reportedHashrateTotal) * 100) + "%");
+            // For current hashrate
+            // System.out.println(row[0] + " has mined " + (Float.parseFloat(row[2]) / currentHashrateTotal) * 100 + "%");
+        }
 
         // Changes the minerData into an array that can be written to the CSV file, [0] is the worker name
         List<String[]> allMinerData = new ArrayList<>();
