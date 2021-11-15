@@ -1,5 +1,6 @@
 package com.traptricker;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,10 +10,10 @@ import java.util.*;
 
 public class SeleniumScrapper {
 
-    // ToDo: Add WebDriverManager
     private static ChromeDriver driver;
 
     public SeleniumScrapper(String minerAddress) throws InterruptedException {
+        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         setUpWebdriver(driver, minerAddress);
     }
