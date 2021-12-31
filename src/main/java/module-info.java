@@ -13,6 +13,7 @@ module com.traptricker.etherminetrackerjavafx {
     requires io.github.bonigarcia.webdrivermanager;
     requires org.seleniumhq.selenium.chrome_driver;
     requires com.opencsv;
+    requires org.seleniumhq.selenium.support;
 
     opens com.traptricker.etherminetrackerjavafx to javafx.fxml;
     exports com.traptricker.etherminetrackerjavafx;

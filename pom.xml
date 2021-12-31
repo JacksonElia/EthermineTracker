@@ -124,7 +124,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.traptricker.etherminetrackerjavafx/com.traptricker.etherminetrackerjavafx.HelloApplication
+                                com.traptricker.etherminetrackerjavafx/com.traptricker.etherminetrackerjavafx.OldApplication
                             </mainClass>
                         </configuration>
                     </execution>

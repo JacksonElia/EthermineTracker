@@ -1,0 +1,15 @@
+.root {
+    -fx-background-color: #111222;
+}
+
+.button {
+    -fx-background-color: "SkyBlue";
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14;
+}
+
+.label {
+    -fx-text-fill: "SkyBlue";
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14;
+}

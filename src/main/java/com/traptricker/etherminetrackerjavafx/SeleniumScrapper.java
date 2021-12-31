@@ -1,11 +1,12 @@
 package com.traptricker.etherminetrackerjavafx;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,27 +15,36 @@ public class SeleniumScrapper {
 
     private static ChromeDriver driver;
 
-    public SeleniumScrapper(String minerAddress) throws InterruptedException {
+    public SeleniumScrapper() {
+        // TODO: Check up on stack overflow and launch in headless
         WebDriverManager.chromedriver().setup();
+        System.setProperty("webdriver.chrome.driver", "src/main/extras/chromedriver.exe");
         driver = new ChromeDriver();
-        setUpWebdriver(driver, minerAddress);
     }
 
-    private void setUpWebdriver(WebDriver driver, String minerAddress) throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+    // Returns a bool based on if it found the website correctly
+    public boolean setUpWebdriver(String minerAddress) {
         String ethermineURL = String.format("https://ethermine.org/miners/%s/dashboard", minerAddress);
         driver.get(ethermineURL);
-
-        // Waits to make sure the web page has loaded
-        Thread.sleep(5000);
-
-        // TODO: Makes this an explicit wait
-        // Turns on auto refreshing for the page
-        driver.findElement(By.xpath("//div[@class='slider round']")).click();
+        try {
+            // Explicitly waits until it sees the slider
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='slider round']")));
+            // Turns on auto refreshing for the page
+            driver.findElement(By.xpath("//div[@class='slider round']")).click();
+            return true;
+        } catch (TimeoutException tex) {
+            System.out.println("Couldn't find slider, miner address was probably bad or ethermine is down.");
+            driver.quit();
+            return false;
+        } catch (ElementClickInterceptedException eciex) {
+            System.out.println("Slider was intercepted, miner address was probably bad.");
+            driver.quit();
+            return false;
+        }
     }
 
     public WebElement getEthermineTable() {
-        // TODO: Makes this an explicit wait
         List<WebElement> searchList = driver.findElements(By.xpath("//div[@class='active table-container']//tbody"));
         // Confirms that there are active miners, then gets each of them (isEmpty doesn't work)
         if (searchList.get(0).getText().split(" ").length > 1) {

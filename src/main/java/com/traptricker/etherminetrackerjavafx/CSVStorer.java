@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,21 +21,6 @@ public class CSVStorer {
         reader.close();
 
         CSVWriter writer = new CSVWriter(new FileWriter(filePath));
-
-        float reportedHashrateTotal = 0;
-        // float currentHashrateTotal = 0;
-        for (String[] row : allRows) {
-            reportedHashrateTotal += Float.parseFloat(row[1]);
-            // currentHashrateTotal += Float.parseFloat(row[2]);
-        }
-
-        // Gives percentage that each worker has mined
-        for (String[] row : allRows) {
-            // For reported hashrate
-            System.out.println(row[0] + " has mined " + Math.round((Float.parseFloat(row[1]) / reportedHashrateTotal) * 100) + "%");
-            // For current hashrate
-            // System.out.println(row[0] + " has mined " + (Float.parseFloat(row[2]) / currentHashrateTotal) * 100 + "%");
-        }
 
         // Changes the minerData into an array that can be written to the CSV file, [0] is the worker name
         List<String[]> allMinerData = new ArrayList<>();
@@ -74,4 +60,37 @@ public class CSVStorer {
         }
         writer.close();
     }
+
+    public static String[] getStoredValues(String filePath) throws IOException, CsvException {
+        CSVReader reader = new CSVReader(new FileReader(filePath));
+        // Gets the whole CSV File
+        List<String[]> allRows = reader.readAll();
+        reader.close();
+
+        float reportedHashrateTotal = 0;
+        float currentHashrateTotal = 0;
+        for (String[] row : allRows) {
+            reportedHashrateTotal += Float.parseFloat(row[1]);
+            currentHashrateTotal += Float.parseFloat(row[2]);
+        }
+
+        String reportedHashrateTotalString = "";
+        String currentHashrateTotalString = "";
+        // Gives percentage that each worker has mined
+        for (String[] row : allRows) {
+            // For reported hashrate
+            System.out.println(row[0] + " has mined " + Math.round((Float.parseFloat(row[1]) / reportedHashrateTotal) * 100) + "%");
+            reportedHashrateTotalString += row[0] + " has mined " + Math.round((Float.parseFloat(row[1]) / reportedHashrateTotal) * 100) + "%\n";
+            // For current hashrate
+            System.out.println(row[0] + " has mined " +  Math.round((Float.parseFloat(row[2]) / currentHashrateTotal) * 100) + "%");
+            currentHashrateTotalString += row[0] + " has mined " +  Math.round((Float.parseFloat(row[2]) / currentHashrateTotal) * 100) + "%\n";
+        }
+        return new String[] {currentHashrateTotalString, reportedHashrateTotalString};
+    }
+
+    public static void clearCSVFile(String filePath) throws IOException, CsvException {
+        CSVWriter writer = new CSVWriter(new FileWriter(filePath));
+        writer.writeAll(new ArrayList<>());
+    }
+
 }
