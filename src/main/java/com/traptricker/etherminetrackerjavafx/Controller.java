@@ -6,9 +6,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import org.openqa.selenium.WebElement;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Objects;
@@ -47,11 +53,14 @@ public class Controller implements Initializable {
 
     @FXML
     private void trackPressed(ActionEvent e) {
-        // TODO: Add in invisible button on top of track button that takes it place and stops tracking
-        trackButton.setDisable(true);
-        errorLabel.setText("Miner Address was bad");
-        Thread thread = new Thread(this::trackEthermine);
-        thread.start();
+        if (!Objects.equals(mineraddressTextField.getText(), "")) {
+            // TODO: Add in invisible button on top of track button that takes it place and stops tracking
+            trackButton.setDisable(true);
+            Thread thread = new Thread(this::trackEthermine);
+            thread.start();
+        } else {
+            errorLabel.setText("Enter a miner address");
+        }
     }
 
     @FXML
@@ -70,6 +79,20 @@ public class Controller implements Initializable {
     @FXML
     private void textFieldReturn(ActionEvent e) {
         trackButton.fire();
+    }
+
+    @FXML
+    private void hyperlinkClicked(ActionEvent e) {
+        if (!Objects.equals(mineraddressTextField.getText(), "")) {
+            String ethermineURL = String.format("https://ethermine.org/miners/%s/dashboard", mineraddressTextField.getText());
+            try {
+                Desktop.getDesktop().browse(new URI(ethermineURL));
+            } catch (IOException | URISyntaxException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            errorLabel.setText("Enter a miner address");
+        }
     }
 
     private void trackEthermine() {
