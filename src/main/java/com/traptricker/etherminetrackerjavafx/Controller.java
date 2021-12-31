@@ -41,10 +41,16 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupTextField();
+        // Makes sure the csv file exists, then checks if it can use its data for the labels
         try {
-            if (!Objects.equals(CSVStorer.getStoredValues("src/main/extras/ethermine_data.csv")[0], "")) {
-                currentHashrateLabel.setText(CSVStorer.getStoredValues("src/main/extras/ethermine_data.csv")[0]);
-                reportedHashrateLabel.setText(CSVStorer.getStoredValues("src/main/extras/ethermine_data.csv")[1]);
+            DataStorer.checkFileExists("src/main/extras/ethermine_data.csv");
+            if (!Objects.equals(DataStorer.getStoredValues("src/main/extras/ethermine_data.csv")[0], "")) {
+                currentHashrateLabel.setText(DataStorer.getStoredValues("src/main/extras/ethermine_data.csv")[0]);
+                reportedHashrateLabel.setText(DataStorer.getStoredValues("src/main/extras/ethermine_data.csv")[1]);
+            }
+            DataStorer.checkFileExists("src/main/extras/miner_address.txt");
+            if ((!Objects.equals(DataStorer.getMinerAddress("src/main/extras/miner_address.txt"), ""))) {
+                mineraddressTextField.setText(DataStorer.getMinerAddress("src/main/extras/miner_address.txt"));
             }
         } catch (IOException | CsvException e) {
             e.printStackTrace();
@@ -56,7 +62,9 @@ public class Controller implements Initializable {
         if (!Objects.equals(mineraddressTextField.getText(), "")) {
             // TODO: Add in invisible button on top of track button that takes it place and stops tracking
             trackButton.setDisable(true);
-            Thread thread = new Thread(this::trackEthermine);
+            DataStorer.checkFileExists("src/main/extras/miner_address.txt");
+            DataStorer.storeMinerAddress("src/main/extras/miner_address.txt", mineraddressTextField.getText());
+            Thread thread = new Thread(this::trackButtonThread);
             thread.start();
         } else {
             errorLabel.setText("Enter a miner address");
@@ -66,7 +74,7 @@ public class Controller implements Initializable {
     @FXML
     private void resetPressed(ActionEvent e) {
         try {
-            CSVStorer.clearCSVFile("src/main/extras/ethermine_data.csv");
+            DataStorer.clearCSVFile("src/main/extras/ethermine_data.csv");
             currentHashrateLabel.setText("No Data");
             reportedHashrateLabel.setText("No Data");
 
@@ -95,18 +103,24 @@ public class Controller implements Initializable {
         }
     }
 
-    private void trackEthermine() {
-        // TODO: Launch Selenium in windowless mode
-        // String minerAddress = "0fB3583c11320BB9c7F512e06ce9c3A9218568C9";
+    // Stops the user from entering spaces in the text field
+    private void setupTextField() {
+        mineraddressTextField.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getText().equals(" ")) {
+                change.setText("");
+            }
+            return change;
+        }));
+    }
+
+    private void trackButtonThread() {
         SeleniumScrapper seleniumScrapper = new SeleniumScrapper();
         String minerAddress = mineraddressTextField.getText();
         // Checks to make sure selenium was set up correctly
         if (!seleniumScrapper.setUpWebdriver(minerAddress)) {
-            //Switches to the GUI thread
+            // Switches to the GUI thread
             Platform.runLater(() -> {
                 trackButton.setDisable(false);
-            });
-            Platform.runLater(() -> {
                 errorLabel.setText("Miner Address was bad");
             });
             return;
@@ -117,9 +131,9 @@ public class Controller implements Initializable {
                 WebElement ethermineTable = seleniumScrapper.getEthermineTable();
                 if (ethermineTable != null) {
                     Map<String, Map<String, String>> minerData = seleniumScrapper.getEthermineData(ethermineTable);
-                    CSVStorer.storeCSVData("src/main/extras/ethermine_data.csv", minerData);
-                    String csvCurrentValues = CSVStorer.getStoredValues("src/main/extras/ethermine_data.csv")[0];
-                    String csvReportedValues = CSVStorer.getStoredValues("src/main/extras/ethermine_data.csv")[1];
+                    DataStorer.storeCSVData("src/main/extras/ethermine_data.csv", minerData);
+                    String csvCurrentValues = DataStorer.getStoredValues("src/main/extras/ethermine_data.csv")[0];
+                    String csvReportedValues = DataStorer.getStoredValues("src/main/extras/ethermine_data.csv")[1];
                     Platform.runLater(() -> {
                         currentHashrateLabel.setText(csvCurrentValues);
                         reportedHashrateLabel.setText(csvReportedValues);
@@ -130,7 +144,7 @@ public class Controller implements Initializable {
                     });
                 }
                 // Sleeps for 10 minutes
-                Thread.sleep(6000);
+                Thread.sleep(600000);
             }
         } catch (InterruptedException e) {
             System.out.println("Sleep was interrupted");
@@ -139,16 +153,6 @@ public class Controller implements Initializable {
         }
         // Never going to be reached
         // TODO: add stop button
-    }
-
-    // Stops the user from entering spaces in the text field
-    private void setupTextField() {
-        mineraddressTextField.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getText().equals(" ")) {
-                change.setText("");
-            }
-            return change;
-        }));
     }
 
 }

@@ -13,7 +13,7 @@
          <font>
             <Font size="14.0" />
          </font></Button>
-      <TextField fx:id="mineraddressTextField" layoutX="92.0" layoutY="297.0" onAction="#textFieldReturn" prefHeight="27.0" prefWidth="327.0" promptText="Enter your miner address" text="0fB3583c11320BB9c7F512e06ce9c3A9218568C9">
+      <TextField fx:id="mineraddressTextField" layoutX="92.0" layoutY="297.0" onAction="#textFieldReturn" prefHeight="27.0" prefWidth="327.0" promptText="Enter your miner address">
          <font>
             <Font name="Consolas" size="14.0" />
          </font></TextField>

@@ -3,6 +3,7 @@ package com.traptricker.etherminetrackerjavafx;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,10 +17,11 @@ public class SeleniumScrapper {
     private static ChromeDriver driver;
 
     public SeleniumScrapper() {
-        // TODO: Check up on stack overflow and launch in headless
         WebDriverManager.chromedriver().setup();
-        System.setProperty("webdriver.chrome.driver", "src/main/extras/chromedriver.exe");
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        // Launches the driver in headless mode
+        options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1200","--ignore-certificate-errors","--disable-extensions","--no-sandbox","--disable-dev-shm-usage");
+        driver = new ChromeDriver(options);
     }
 
     // Returns a bool based on if it found the website correctly
@@ -44,6 +46,7 @@ public class SeleniumScrapper {
         }
     }
 
+    // Gets the element for the table containing active miners
     public WebElement getEthermineTable() {
         List<WebElement> searchList = driver.findElements(By.xpath("//div[@class='active table-container']//tbody"));
         // Confirms that there are active miners, then gets each of them (isEmpty doesn't work)

@@ -4,16 +4,29 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
-public class CSVStorer {
+public class DataStorer {
 
+    // Checks if a file exists and if it doesn't, creates the file
+    public static void checkFileExists(String filepath) {
+        try {
+            File file = new File(filepath);
+            if (file.createNewFile()) {
+                System.out.println("File created: " + file.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Stores the data scrapped from Ethermine.org in ethermine_data.csv
     public static void storeCSVData(String filePath, Map<String, Map<String, String>> minerData) throws IOException, CsvException {
         CSVReader reader = new CSVReader(new FileReader(filePath));
         // Gets the whole CSV File
@@ -61,6 +74,7 @@ public class CSVStorer {
         writer.close();
     }
 
+    // Returns the values stored in ethermine_data.csv as formatted strings
     public static String[] getStoredValues(String filePath) throws IOException, CsvException {
         CSVReader reader = new CSVReader(new FileReader(filePath));
         // Gets the whole CSV File
@@ -88,9 +102,41 @@ public class CSVStorer {
         return new String[] {currentHashrateTotalString, reportedHashrateTotalString};
     }
 
+    // Clears all rows and items from ethermine_data.csv
     public static void clearCSVFile(String filePath) throws IOException, CsvException {
         CSVWriter writer = new CSVWriter(new FileWriter(filePath));
         writer.writeAll(new ArrayList<>());
+        writer.close();
+    }
+
+    // Gets the miner address from a stored text file
+    public static String getMinerAddress(String filepath) {
+        try {
+            File minerAddressTxtFile = new File(filepath);
+            Scanner reader = new Scanner(minerAddressTxtFile);
+            // Text file should only have one line
+            String minerAddress = "";
+            while (reader.hasNextLine()) {
+                minerAddress = reader.nextLine();
+            }
+            reader.close();
+            return minerAddress;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static void storeMinerAddress(String filepath, String minerAddress) {
+        try {
+            File minerAddressTxtFile = new File(filepath);
+            FileWriter writer = new FileWriter(minerAddressTxtFile);
+            // Text file should only have one line
+            writer.write(minerAddress);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
