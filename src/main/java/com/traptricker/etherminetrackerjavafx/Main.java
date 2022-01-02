@@ -22,7 +22,7 @@ public class Main extends javafx.application.Application {
         Parent root = FXMLLoader.load(getClass().getResource("view.fxml"));
         Scene scene = new Scene(root);
 
-        Image icon = new Image("file:src/main/extras/logo.png");
+        Image icon = new Image("file:logo.png");
         stage.getIcons().add(icon);
         stage.setTitle("Ethermine Tracker");
         // Gets the css string and adds it to the scene

@@ -43,14 +43,14 @@ public class Controller implements Initializable {
         setupTextField();
         // Makes sure the csv file exists, then checks if it can use its data for the labels
         try {
-            DataStorer.checkFileExists("src/main/extras/ethermine_data.csv");
-            if (!Objects.equals(DataStorer.getStoredValues("src/main/extras/ethermine_data.csv")[0], "")) {
-                currentHashrateLabel.setText(DataStorer.getStoredValues("src/main/extras/ethermine_data.csv")[0]);
-                reportedHashrateLabel.setText(DataStorer.getStoredValues("src/main/extras/ethermine_data.csv")[1]);
+            DataStorer.checkFileExists("ethermine_data.csv");
+            if (!Objects.equals(DataStorer.getStoredValues("ethermine_data.csv")[0], "")) {
+                currentHashrateLabel.setText(DataStorer.getStoredValues("ethermine_data.csv")[0]);
+                reportedHashrateLabel.setText(DataStorer.getStoredValues("ethermine_data.csv")[1]);
             }
-            DataStorer.checkFileExists("src/main/extras/miner_address.txt");
-            if ((!Objects.equals(DataStorer.getMinerAddress("src/main/extras/miner_address.txt"), ""))) {
-                mineraddressTextField.setText(DataStorer.getMinerAddress("src/main/extras/miner_address.txt"));
+            DataStorer.checkFileExists("miner_address.txt");
+            if ((!Objects.equals(DataStorer.getMinerAddress("miner_address.txt"), ""))) {
+                mineraddressTextField.setText(DataStorer.getMinerAddress("miner_address.txt"));
             }
         } catch (IOException | CsvException e) {
             e.printStackTrace();
@@ -62,8 +62,8 @@ public class Controller implements Initializable {
         if (!Objects.equals(mineraddressTextField.getText(), "")) {
             // TODO: Add in invisible button on top of track button that takes it place and stops tracking
             trackButton.setDisable(true);
-            DataStorer.checkFileExists("src/main/extras/miner_address.txt");
-            DataStorer.storeMinerAddress("src/main/extras/miner_address.txt", mineraddressTextField.getText());
+            DataStorer.checkFileExists("miner_address.txt");
+            DataStorer.storeMinerAddress("miner_address.txt", mineraddressTextField.getText());
             Thread thread = new Thread(this::trackButtonThread);
             thread.start();
         } else {
@@ -74,7 +74,7 @@ public class Controller implements Initializable {
     @FXML
     private void resetPressed(ActionEvent e) {
         try {
-            DataStorer.clearCSVFile("src/main/extras/ethermine_data.csv");
+            DataStorer.clearCSVFile("ethermine_data.csv");
             currentHashrateLabel.setText("No Data");
             reportedHashrateLabel.setText("No Data");
 
@@ -131,9 +131,9 @@ public class Controller implements Initializable {
                 WebElement ethermineTable = seleniumScrapper.getEthermineTable();
                 if (ethermineTable != null) {
                     Map<String, Map<String, String>> minerData = seleniumScrapper.getEthermineData(ethermineTable);
-                    DataStorer.storeCSVData("src/main/extras/ethermine_data.csv", minerData);
-                    String csvCurrentValues = DataStorer.getStoredValues("src/main/extras/ethermine_data.csv")[0];
-                    String csvReportedValues = DataStorer.getStoredValues("src/main/extras/ethermine_data.csv")[1];
+                    DataStorer.storeCSVData("ethermine_data.csv", minerData);
+                    String csvCurrentValues = DataStorer.getStoredValues("ethermine_data.csv")[0];
+                    String csvReportedValues = DataStorer.getStoredValues("ethermine_data.csv")[1];
                     Platform.runLater(() -> {
                         currentHashrateLabel.setText(csvCurrentValues);
                         reportedHashrateLabel.setText(csvReportedValues);
