@@ -1,6 +1,5 @@
 package com.traptricker.etherminetrackerjavafx;
 
-import com.opencsv.exceptions.CsvException;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
