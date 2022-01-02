@@ -35,6 +35,7 @@ public class Main extends javafx.application.Application {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent t) {
+                SeleniumScrapper.driver.quit();
                 Platform.exit();
                 System.exit(0);
             }

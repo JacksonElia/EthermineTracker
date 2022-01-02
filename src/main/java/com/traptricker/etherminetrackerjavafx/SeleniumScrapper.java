@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class SeleniumScrapper {
 
-    private static ChromeDriver driver;
+    public static ChromeDriver driver;
 
     public SeleniumScrapper() {
         WebDriverManager.chromedriver().setup();
