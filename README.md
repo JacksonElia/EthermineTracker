@@ -2,7 +2,7 @@
 This project is for those who might have multiple people mining to the same pool, and want to track how much each person is owed. It uses selenium to launch Chrome in headless mode and tracks how much each computer/person is mining on ethermine.org every 10 minutes. It stores the data in a csv file and displays it on the JavaFX gui.
 
 # How to use it
-Go to ![image](https://user-images.githubusercontent.com/85963782/147962766-318f4ead-ee04-4162-8e8f-1bb309a403cb.png) and download the latest release's zip file. Extract the folder in the zip to somewhere you will remember, Desktop is a good place, then open the folder, and run (double-click) `EthermineTracker.jar`. If everything works correctly, this window should appear: 
+Go to ![image](https://user-images.githubusercontent.com/85963782/147962766-318f4ead-ee04-4162-8e8f-1bb309a403cb.png) and download the latest release's zip file. Extract the folder in the zip to somewhere you will remember, your Desktop is a good place, then open the folder, and run (double-click) `EthermineTracker.jar`. If everything works correctly, this window should appear: 
 
 ![image](https://user-images.githubusercontent.com/85963782/147963971-4c25348b-80d6-478a-9a6f-750bbcdce1a4.png)
 
