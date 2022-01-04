@@ -10,8 +10,7 @@ Now, just enter your miner address (mine is: `0fB3583c11320BB9c7F512e06ce9c3A921
 
 
 # Bugs
-If you are getting the error `A JNI error has occurred, please check your installation and try again`, first try installing the newest java jdk, if that doesn't work, try following this stack overflow post I made:
-https://stackoverflow.com/questions/70560742/i-made-a-jar-file-and-when-my-friend-tries-to-open-it-they-get-the-error-a-jni
+If you are getting the error `A JNI error has occurred, please check your installation and try again`, first try installing the newest java jdk, if that doesn't work, try following [this](https://stackoverflow.com/questions/70560742/i-made-a-jar-file-and-when-my-friend-tries-to-open-it-they-get-the-error-a-jni) stack overflow post I made.
 
 # Frameworks, Tools, and Libraries used
 - [JavaFX](https://openjfx.io/)
