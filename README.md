@@ -26,4 +26,4 @@ Me and a group of my friends all mine to the same pool so that we can sell more 
 # Donate
 If you find this program useful, you can mine to my ethereum pool at `0fB3583c11320BB9c7F512e06ce9c3A9218568C9`.
 
-MIT © [Jackson Elia](https://github.com/JacksonElia)
+MIT © 2023 [Jackson Elia](https://github.com/JacksonElia)
